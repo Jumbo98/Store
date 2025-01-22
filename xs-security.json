@@ -1,6 +1,41 @@
 {
-  "scopes": [],
+  "xsappname": "Store", 
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Owner",
+      "description": "Owner"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin"
+    }
+  ],
   "attributes": [],
-  "role-templates": [],
-  "authorities-inheritance": false
+  "role-templates": [
+    {
+      "name": "Owner",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Owner"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Admin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ],
+      "attribute-references": []
+    }
+  ],
+  "oauth2-configuration": {
+    "credential-types": [
+        "binding-secret",
+        "x509"
+    ],
+    "redirect-uris": [
+        "https://*.applicationstudio.cloud.sap/**"
+    ]
+}
 }
