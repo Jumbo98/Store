@@ -1,5 +1,6 @@
 {
   "xsappname": "Store", 
+  "tenant-mode": "dedicated",
   "scopes": [
     {
       "name": "$XSAPPNAME.Owner",

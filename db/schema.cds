@@ -37,7 +37,7 @@ entity Products :  cuid, describer {
     // status : Association to Statuses;
   }
 
-entity Statuses : cuid, managed, describer {}
+entity Statuses : cuid, describer {}
 
 
 entity Orders : cuid, managed {
