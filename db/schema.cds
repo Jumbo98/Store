@@ -25,6 +25,7 @@ entity CompanyManufacturers : cuid, describer {
     //                on Products.company = $self;
 }
 
+
 entity Products :  cuid, describer {
     type       : Association to ProductType;
     company    : Association to CompanyManufacturers;
@@ -37,17 +38,19 @@ entity Products :  cuid, describer {
     // status : Association to Statuses;
   }
 
-entity Statuses : cuid, describer {}
+entity Statuses : cuid, describer {
+    statusCriticality: Int16;
+}
 
-
+@odata.draft.enabled
 entity Orders : cuid, managed {
-  OrderItems : Association to many OrderItems on OrderItems.Order = $self;
-  quantity : Integer;
+  OrderItems : Composition of many OrderItems on OrderItems.order = $self;
   status : Association to Statuses;
 }
 
-entity OrderItems : cuid, managed {
-key Order : Association to Orders;
- product : Association to Products;
+@odata.draft.bypass
+entity OrderItems : managed {
+key order : Association to Orders;
+key product : Association to Products;
   quantity : Integer;
 }

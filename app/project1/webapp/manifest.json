@@ -43,13 +43,14 @@
     }
   },
   "sap.ui5": {
-    "flexEnabled": true,
+    "flexEnabled": false,
     "dependencies": {
       "minUI5Version": "1.132.1",
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.fe.templates": {}
+        "sap.fe.templates": {},
+        "sap.f": {}
       }
     },
     "contentDensities": {
@@ -81,17 +82,36 @@
       "css": []
     },
     "routing": {
-      "config": {},
+      "config": {
+        "flexibleColumnLayout": {
+          "defaultTwoColumnLayoutType": "TwoColumnsBeginExpanded",
+          "defaultThreeColumnLayoutType": "ThreeColumnsMidExpanded"
+        },
+        "routerClass": "sap.f.routing.Router"
+      },
       "routes": [
         {
           "pattern": ":?query:",
           "name": "ProductsViewList",
-          "target": "ProductsViewList"
+          "target": [
+            "ProductsViewList"
+          ]
         },
         {
           "pattern": "ProductsView({key}):?query:",
           "name": "ProductsViewObjectPage",
-          "target": "ProductsViewObjectPage"
+          "target": [
+            "ProductsViewList",
+            "ProductsViewObjectPage"
+          ]
+        },
+        {
+          "name": "OrdersViewObjectPage",
+          "pattern": "OrdersView({OrdersViewKey}):?query:",
+          "target": [
+            "ProductsViewList",
+            "OrdersViewObjectPage"
+          ]
         }
       ],
       "targets": {
@@ -108,17 +128,88 @@
                   "detail": {
                     "route": "ProductsViewObjectPage"
                   }
+                },
+                "OrdersView": {
+                  "detail": {
+                    "route": "OrdersViewObjectPage"
+                  }
                 }
               },
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
-                    "type": "ResponsiveTable"
+                    "type": "ResponsiveTable",
+                    "disableCopyToClipboard": true,
+                    "enableExport": true,
+                    "personalization": {
+                      "column": true,
+                      "sort": true
+                    },
+                    "selectAll": false,
+                    "selectionMode": "None"
+                  },
+                  "columns": {
+                    "DataField::title": {
+                      "availability": "Default"
+                    },
+                    "DataField::description": {
+                      "availability": "Default"
+                    },
+                    "DataField::price": {
+                      "width": "10rem"
+                    }
+                  },
+                  "actions": {
+                    "refreshProducts": {
+                      "press": "project1.ext.controller.RefreshBtn.refresh",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "{i18n>refresh}"
+                    }
+                  }
+                },
+                "/OrdersView/@com.sap.vocabularies.UI.v1.LineItem#tableView": {
+                  "tableSettings": {
+                    "disableCopyToClipboard": false,
+                    "enableExport": false,
+                    "selectAll": false,
+                    "selectionMode": "None",
+                    "type": "ResponsiveTable",
+                    "quickVariantSelection": {
+                      "showCounts": false
+                    }
+                  },
+                  "actions": {
+                    "refreshOrders": {
+                      "press": "project1.ext.controller.RefreshBtn.refreshOrders",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "{i18n>refresh}"
+                    }
                   }
                 }
+              },
+              "initialLoad": "Enabled",
+              "defaultTemplateAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#table2",
+              "views": {
+                "paths": [
+                  {
+                    "key": "table2",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#table2"
+                  },
+                  {
+                    "key": "tableView",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView",
+                    "entitySet": "OrdersView"
+                  }
+                ]
               }
             }
-          }
+          },
+          "controlAggregation": "beginColumnPages",
+          "contextPattern": ""
         },
         "ProductsViewObjectPage": {
           "type": "Component",
@@ -129,6 +220,87 @@
               "editableHeaderContent": false,
               "contextPath": "/ProductsView"
             }
+          },
+          "controlAggregation": "midColumnPages",
+          "contextPattern": "/ProductsView({key})"
+        },
+        "OrdersViewObjectPage": {
+          "type": "Component",
+          "id": "OrdersViewObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/OrdersView",
+              "controlConfiguration": {
+                "OrderItems/@com.sap.vocabularies.UI.v1.LineItem#Itemsoforder": {
+                  "tableSettings": {
+                    "disableCopyToClipboard": true,
+                    "enableExport": false,
+                    "enableFullScreen": true,
+                    "enablePaste": false,
+                    "selectAll": false,
+                    "selectionMode": "Multi",
+                    "type": "ResponsiveTable",
+                    "creationMode": {
+                      "createAtEnd": true,
+                      "inlineCreationRowsHiddenInEditMode": true,
+                      "name": "InlineCreationRows"
+                    },
+                    "quickVariantSelection": {
+                      "showCounts": true
+                    }
+                  },
+                  "actions": {
+                    "refreshOrderItems": {
+                      "press": "project1.ext.controller.RefreshBtn.refreshOrderItems",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "{i18n>refresh}"
+                    }
+                  },
+                  "columns": {
+                    "Quantity": {
+                      "header": "Quantity",
+                      "width": "20%",
+                      "position": {
+                        "anchor": "DataField::product_ID",
+                        "placement": "After"
+                      },
+                      "template": "project1.ext.fragment.Quantity"
+                    },
+                    "DataField::product_ID": {
+                      "widthIncludingColumnHeader": true,
+                      "width": "25%"
+                    },
+                    "DataField::product::price": {
+                      "width": "10%"
+                    }
+                  }
+                }
+              },
+              "sectionLayout": "Page",
+              "variantManagement": "None",
+              "editableHeaderContent": false
+            }
+          },
+          "controlAggregation": "midColumnPages",
+          "contextPattern": "/OrdersView({OrdersViewKey})"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "sap.fe.templates.RootContainer.view.Fcl",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
+    },
+    "extends": {
+      "extensions": {
+        "sap.ui.controllerExtensions": {
+          "sap.fe.templates.ObjectPage.ObjectPageController#project1::OrdersViewObjectPage": {
+            "controllerName": "project1.ext.controller.OrdersView"
           }
         }
       }

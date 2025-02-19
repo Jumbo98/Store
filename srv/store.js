@@ -51,24 +51,44 @@ module.exports = cds.service.impl(function () {
 
   
   async function addItemToOrder(req) {
-      const currUser = req.user,
-      orderByCurrUser = await SELECT.one.from(OrderItemsView).where(`createdBy = ${currUser}`),
+
+      const currUser = req.user.id,
       id = req.params[0],
+      orderByCurrUser = await SELECT.one.from(OrdersView).where(`createdBy = '${currUser}'`),
+      orderItemByCurrUser = orderByCurrUser ? await SELECT.one.from(OrderItemsView).where(`order_ID = '${orderByCurrUser.ID}' and product_ID = '${id}'`)
+      : null,
       count = 1,
-      { stock } = await SELECT.one.from(ProductsView).columns('stock').where(`ID = '${id}'`);
+      { stock, expireDate } = await SELECT.one.from(ProductsView).columns('stock', 'expireDate').where(`ID = '${id}'`);
 
-    if (count > stock)
-      req.error(`Current quantity of product equal ${stock}`);
+    if (count > stock){
+      return req.error(`Current quantity of product equal ${stock}`);
+    }
+      
+    if (new Date(expireDate).getTime() <= new Date().getTime()){
+      return req.error(`This item expired`);
+    }
 
-    let newItem = {
-      quantity: count,
-      parent_ID: orderByCurrUser ? orderByCurrUser.ID : uuid(),
+    if(!orderByCurrUser){
+      var newOrder = {
+        ID: orderByCurrUser ? orderByCurrUser.order_ID : uuid(),
+        status_ID: '66F30140FADA914F190051EE8E50FF04',
+        createdBy: currUser,
+        modifiedBy: currUser
+      };
+      
+      await INSERT.into(OrdersView).entries(newOrder);
+    }
+
+    let newOrderItem = {
+      quantity: orderItemByCurrUser ? (+orderItemByCurrUser.quantity + 1) : count,
+      order_ID: orderItemByCurrUser ? orderItemByCurrUser.order_ID : orderByCurrUser ? orderByCurrUser.ID : newOrder.ID,
       product_ID: id,
       createdBy: currUser,
       modifiedBy: currUser
     };
 
-    await INSERT.into(OrderItemsView).entries(newItem);
+    await UPSERT.into(OrderItemsView).entries(newOrderItem);
+    // .where(`order_ID = '${newOrderItem.order_ID}' and product_ID = '${newOrderItem.product_ID}'`);
 
   };
 
@@ -132,25 +152,14 @@ module.exports = cds.service.impl(function () {
       if (product.stock === 0) {
         product.description = '00000000000000000000000'
       }
-      // if (!product.expireDate) {
-      // product.expireDate = new Date();
-      // product.expireDate = new Date(new Date().getTime() + (oneDay * Math.random() * (10 - (-3) + 1) + (-3)));
-      // }
+
       if(new Date(product.expireDate).getTime() - currentDate > oneDay * 3 ){
         product.expireStatus = 0;
       } else {
         product.expireStatus = 1;
       }
-      if (product.stock > 50) {
-        product.price = product.price * 0.9;
-        product.title += "10% discount";
-      }
     });
 
-    // const srv = await cds.connect.to('Catalog');
-
-    // return await SELECT.from(ProductTypeView);
-    // return await SELECT.from('Catalog.ProductsView').join('Catalog.ProductTypeView').on('ProductsView.type_ID = ProductTypeView.ID');
     return arr;
   };
   function afterEach(product, next) {
