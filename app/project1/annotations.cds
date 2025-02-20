@@ -330,6 +330,11 @@ annotate service.OrdersView with @(
                 $Type : 'UI.DataField',
                 Value : modifiedBy,
             },
+            {
+                $Type : 'UI.DataField',
+                Value : totalByOrder,
+                Label : '{i18n>Total}',
+            },
         ],
     },
 );
@@ -380,6 +385,11 @@ annotate service.OrderItemsView with @(
             $Type : 'UI.DataField',
             Value : product.price,
             Label : 'price',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalByItem,
+            Label : '{i18n>TotalOfOrderItem}',
         },
     ]
 );
@@ -433,5 +443,19 @@ annotate service.ProductsView with {
         $value : title,
         ![@UI.TextArrangement] : #TextOnly,
     }
+};
+
+annotate service.OrderItemsView with {
+    totalByItem @(
+        Common.FieldControl : #ReadOnly,
+        Measures.ISOCurrency : '$',
+    )
+};
+
+annotate service.OrdersView with {
+    totalByOrder @(
+        Common.FieldControl : #ReadOnly,
+        Measures.ISOCurrency : '$',
+    )
 };
 

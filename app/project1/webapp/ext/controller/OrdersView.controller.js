@@ -15,8 +15,7 @@ sap.ui.define(['sap/ui/core/mvc/ControllerExtension'], function (ControllerExten
 
 				this.base.getExtensionAPI().getEditFlow().attachonBeforeDelete(async function(event){
 					var tableOrderItems = sap.ui.getCore().byId('project1::OrdersViewObjectPage--fe::table::OrderItems::LineItem::Itemsoforder::Table'),
-					count = await tableOrderItems.getCounts();
-					debugger;
+					count = queueMicrotask(async ()=>await tableOrderItems.getCounts());
 				});
 			},
 

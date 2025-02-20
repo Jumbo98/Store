@@ -7,6 +7,9 @@ service Catalog {
     entity ProductsView as projection on market.Products actions{
         action addToOrderByCurrUser()
     };
-    entity OrdersView as projection on market.Orders;
+    entity OrdersView as projection on market.Orders {
+        *,
+        OrderItems
+    };
     entity OrderItemsView as projection on market.OrderItems;
 };

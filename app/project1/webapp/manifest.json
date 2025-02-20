@@ -276,6 +276,9 @@
                     },
                     "DataField::product::price": {
                       "width": "10%"
+                    },
+                    "DataField::totalByItem": {
+                      "width": "20%"
                     }
                   }
                 }

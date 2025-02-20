@@ -22,34 +22,14 @@ module.exports = cds.service.impl(function () {
   this.after('READ', ProductsView, afterRead);
 
   this.after('each', ProductsView, afterEach);
+  this.after('each', OrderItemsView, afterEachItem);
+  this.after('each', OrdersView, afterEachOrder);
+  this.on('READ', 'OrdersView', async (req, next) => {
+    req.query.SELECT.columns.push({ ref: ['OrderItems'], expand: ['*', { ref: ['product'], expand: ['*']} ] });
+    
+    return await next();
+});
 
-  // async function getCurrentOrder(req) {
-  //   let [id] = req.params;
-
-  //   return await SELECT.one.from(OrdersView).where(`ID = '${id}' `);
-  // }
-  // async function deleteCurrentOrder(req) {
-  //   let [id] = req.params;
-  //   await DELETE.from(OrdersView, id);
-  // }
-  // async function deleteItemByID(req) {
-  //   let [id] = req.params,
-  //     { itemID } = req.data;
-
-  //   await DELETE.from(OrderItemsView).where(`product_id = '${itemID}' and parent_id = '${id}'`);
-
-  //   return await SELECT.one.from(OrdersView).where(`ID = '${id}' `);
-  // }
-  // async function deleteItem(req) {
-  //   let [id, itemID] = req.params;
-
-  //   await DELETE.from(OrderItemsView, { product_ID: itemID, parent_ID: id })
-
-  //   await SELECT.one.from(OrdersView).where(`ID = '${id}' `);
-  // }
-
-
-  
   async function addItemToOrder(req) {
 
       const currUser = req.user.id,
@@ -71,7 +51,7 @@ module.exports = cds.service.impl(function () {
     if(!orderByCurrUser){
       var newOrder = {
         ID: orderByCurrUser ? orderByCurrUser.order_ID : uuid(),
-        status_ID: '66F30140FADA914F190051EE8E50FF04',
+        status_ID: '66F30140-FADA-914F-1900-51EE8E50FF04',
         createdBy: currUser,
         modifiedBy: currUser
       };
@@ -114,30 +94,6 @@ module.exports = cds.service.impl(function () {
       return stock;
     }
   };
-//   async function beforeRead(req) {
-//     const stock = Math.floor(Math.random() * 100),
-//       price = Math.floor(Math.random() * 100),
-//       expireDate = new Date(new Date().getTime() + Math.floor(Math.random() * 10000)),
-//       { title } = await SELECT.one.from(ProductsView).columns('title').where('price > 0 and price < 100'),
-//       { description } = await SELECT.one.from(ProductsView).columns('description').where('price > 100'),
-//       createObj = createNewData(uuid(), 'id1', 'id10', stock, price, expireDate, title + " (New offer)", description + " (New offer)");
-
-//     await INSERT.into(ProductsView).entries(createObj);
-
-//     let arrExpireDateIsNull = await SELECT.from(ProductsView).where(`expireDate is null`);
-
-//     if (arrExpireDateIsNull.length) {
-//       arrExpireDateIsNull.map(data => data.expireDate = generateExpireDate());
-//       await UPSERT.into(ProductsView)
-//         .entries(arrExpireDateIsNull);
-
-//     }
-
-//     // await UPDATE.entity(ProductsView)
-//     //         .set({expireDate: generateExpireDate() })
-//     //         .where(`expireDate is null`);  
-
-//   };
 
   function generateExpireDate() {
     const oneDay = 1000 * 60 * 60 * 24;
@@ -168,6 +124,22 @@ module.exports = cds.service.impl(function () {
     if (stock === 0)
       product.description = 'Empty';
 
+
+    return next;
+  };
+  function afterEachItem(orderItem, next) {
+    let { product: {price}, quantity } = orderItem;
+  
+    orderItem.totalByItem = price * quantity;
+
+
+    return next;
+  };
+  async function afterEachOrder(order, next) {
+    let { OrderItems } = order,
+    total = OrderItems.reduce((total, currV)=> total+=currV.product.price * currV.quantity,0);
+
+    order.totalByOrder = total;
 
     return next;
   };
