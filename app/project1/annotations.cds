@@ -87,26 +87,6 @@ annotate service.ProductsView with @(
         type_ID,
         company_ID,
     ],
-    UI.SelectionPresentationVariant #table1 : {
-        $Type : 'UI.SelectionPresentationVariantType',
-        PresentationVariant : {
-            $Type : 'UI.PresentationVariantType',
-            Visualizations : [
-                '@UI.LineItem',
-            ],
-            GroupBy : [
-                company_ID,
-            ],
-            SortOrder : [
-                {
-                    $Type : 'Common.SortOrderType',
-                    Property : title,
-                    Descending : false,
-                },
-            ],
-        }
-        
-    },
     UI.SelectionPresentationVariant #table2 : {
         $Type : 'UI.SelectionPresentationVariantType',
         PresentationVariant : {
@@ -132,16 +112,7 @@ annotate service.ProductsView with @(
             Label : '{i18n>AddToOrder}',
         },
     ],
-    UI.PresentationVariant #vh_OrderItemsView_product : {
-        $Type : 'UI.PresentationVariantType',
-        SortOrder : [
-            {
-                $Type : 'Common.SortOrderType',
-                Property : title,
-                Descending : false,
-            },
-        ],
-    },
+
 );
 
 
@@ -211,7 +182,17 @@ annotate service.ProductTypeView with @(
                 Descending : false,
             },
         ],
-    }
+    },
+    UI.PresentationVariant #vh_ProductsView_type1 : {
+        $Type : 'UI.PresentationVariantType',
+        SortOrder : [
+            {
+                $Type : 'Common.SortOrderType',
+                Property : ID,
+                Descending : false,
+            },
+        ],
+    },
 );
 
 annotate service.ProductsView with {
@@ -232,6 +213,7 @@ annotate service.ProductsView with {
                 },
             ],
             Label : '{i18n>Types}',
+            PresentationVariantQualifier : 'vh_ProductsView_type1',
         },
         Common.ValueListWithFixedValues : true,
     )
@@ -389,7 +371,7 @@ annotate service.OrderItemsView with @(
         {
             $Type : 'UI.DataField',
             Value : totalByItem,
-            Label : '{i18n>TotalOfOrderItem}',
+            Label : 'totalByItem',
         },
     ]
 );
@@ -402,7 +384,7 @@ annotate service.OrderItemsView with {
         },
         Common.ValueList : {
             $Type : 'Common.ValueListType',
-            CollectionPath : 'ProductsView',
+            CollectionPath : 'FreshProducts',
             Parameters : [
                 {
                     $Type : 'Common.ValueListParameterInOut',
@@ -429,14 +411,39 @@ annotate service.OrderItemsView with {
                     $Type : 'Common.ValueListParameterDisplayOnly',
                     ValueListProperty : 'price',
                 },
+                {
+                    $Type : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'expireDate',
+                },
             ],
             Label : 'Available products',
             PresentationVariantQualifier : 'vh_OrderItemsView_product',
+           
         },
-        Common.ValueListWithFixedValues : true,
-        Common.FieldControl : #Mandatory,
+        Common.ValueListWithFixedValues : false,
+        Common.FieldControl : #Mandatory, 
     )
 };
+
+annotate service.FreshProducts with {
+    ID @Common.Text : {
+        $value : title,
+        ![@UI.TextArrangement] : #TextOnly,
+    };
+};
+
+annotate service.FreshProducts with @(
+    UI.PresentationVariant #vh_OrderItemsView_product : {
+        $Type : 'UI.PresentationVariantType',
+        SortOrder : [
+            {
+                $Type : 'Common.SortOrderType',
+                Property : expireDate,
+                Descending : true,
+            },
+        ],
+    },
+);
 
 annotate service.ProductsView with {
     ID @Common.Text : {
@@ -445,15 +452,16 @@ annotate service.ProductsView with {
     }
 };
 
-annotate service.OrderItemsView with {
-    totalByItem @(
+annotate service.OrdersView with {
+    totalByOrder @(
         Common.FieldControl : #ReadOnly,
         Measures.ISOCurrency : '$',
     )
 };
 
-annotate service.OrdersView with {
-    totalByOrder @(
+
+annotate service.OrderItemsView with {
+    totalByItem @(
         Common.FieldControl : #ReadOnly,
         Measures.ISOCurrency : '$',
     )

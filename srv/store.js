@@ -13,6 +13,7 @@ module.exports = cds.service.impl(function () {
   // this.on('getCurrentOrder', OrdersView, getCurrentOrder);
 
   this.on('addToOrderByCurrUser', ProductsView, addItemToOrder);
+  this.on('addToOrderWithParams', ProductsView, addItemToOrderWithParams);
   // this.on('deleteCurrentOrder', OrdersView, deleteCurrentOrder);
   // this.on('deleteItemByID', OrdersView, deleteItemByID);
   // this.on('deleteItem', OrderItemsView, deleteItem);
@@ -24,11 +25,11 @@ module.exports = cds.service.impl(function () {
   this.after('each', ProductsView, afterEach);
   this.after('each', OrderItemsView, afterEachItem);
   this.after('each', OrdersView, afterEachOrder);
-  this.on('READ', 'OrdersView', async (req, next) => {
-    req.query.SELECT.columns.push({ ref: ['OrderItems'], expand: ['*', { ref: ['product'], expand: ['*']} ] });
+//   this.on('READ', 'OrdersView', async (req, next) => {
+//     req.query.SELECT.columns.push({ ref: ['OrderItems'], expand: ['*', { ref: ['product'], expand: ['*']} ] });
     
-    return await next();
-});
+//     return await next();
+// });
 
   async function addItemToOrder(req) {
 
@@ -51,7 +52,7 @@ module.exports = cds.service.impl(function () {
     if(!orderByCurrUser){
       var newOrder = {
         ID: orderByCurrUser ? orderByCurrUser.order_ID : uuid(),
-        status_ID: '66F30140-FADA-914F-1900-51EE8E50FF04',
+        status_ID: '6FF30140-FADA-914F-1900-51EE8E50FF04',
         createdBy: currUser,
         modifiedBy: currUser
       };
@@ -72,16 +73,20 @@ module.exports = cds.service.impl(function () {
 
   };
 
+  function addItemToOrderWithParams(req) {
+    logger(req);
+  };
+
   function createNewData(ID, type_ID, company_ID, stock, price, expireDate, title, description) {
     return {
-      ID: ID,
-      type_ID: type_ID,
-      company_ID: company_ID,
-      stock: stock,
-      price: price,
-      expireDate: expireDate,
-      title: title,
-      description: description
+      ID,
+      type_ID,
+      company_ID,
+      stock,
+      price,
+      expireDate,
+      title,
+      description
     }
   };
   async function getStockByID(req) {
@@ -132,12 +137,12 @@ module.exports = cds.service.impl(function () {
   
     orderItem.totalByItem = price * quantity;
 
-
     return next;
   };
   async function afterEachOrder(order, next) {
-    let { OrderItems } = order,
-    total = OrderItems.reduce((total, currV)=> total+=currV.product.price * currV.quantity,0);
+    let { ID } = order,
+    orderItems = await SELECT.from(OrderItemsView).columns('quantity', 'product.price as price').where({order_ID: ID}),
+    total = orderItems.reduce((total, currV)=> total+=currV.price * currV.quantity,0);
 
     order.totalByOrder = total;
 

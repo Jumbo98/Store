@@ -218,7 +218,23 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/ProductsView"
+              "contextPath": "/ProductsView",
+              "content": {
+                "header": {
+                  "actions": {
+                    "AddToActiveOrder": {
+                      "press": "project1.ext.controller.AddToActiveOrder.openActiveOrderPopup",
+                      "visible": true,
+                      "enabled": true,
+                      "text": "{i18n>addToActiveOrder}",
+                      "position": {
+                        "placement": "Before",
+                        "anchor": "DataFieldForAction::Catalog.addToOrderByCurrUser"
+                      }
+                    }
+                  }
+                }
+              }
             }
           },
           "controlAggregation": "midColumnPages",
@@ -275,10 +291,10 @@
                       "width": "25%"
                     },
                     "DataField::product::price": {
-                      "width": "10%"
+                      "width": "20%"
                     },
                     "DataField::totalByItem": {
-                      "width": "20%"
+                      "width": "19%"
                     }
                   }
                 }

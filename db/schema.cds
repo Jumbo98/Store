@@ -46,13 +46,14 @@ entity Statuses : cuid, describer {
 entity Orders : cuid, managed {
   OrderItems : Composition of many OrderItems on OrderItems.order = $self;
   status : Association to Statuses;
-  virtual totalByOrder: Integer;
+  virtual totalByOrder: Integer default 0;
 }
+
 
 @odata.draft.bypass
 entity OrderItems : managed {
 key order : Association to Orders;
 key product : Association to Products;
   quantity : Integer;
-  virtual totalByItem: Integer;
+  virtual totalByItem: Integer default 0;
 }

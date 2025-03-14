@@ -5,7 +5,7 @@
 			core:require="{ handler: 'project1/ext/fragment/Quantity'}"
 			visible="{ui>/isEditable}"
 			value="{quantity}"
-			min="0"
+			min="1"
 			max="{path: 'product/stock', targetType: 'float', formatter: 'handler.test'}"
 			width="100%"
 			step="1"

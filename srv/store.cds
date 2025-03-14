@@ -5,11 +5,15 @@ service Catalog {
     entity CompanyManufacturersView as projection on market.CompanyManufacturers;
     entity StatusesView as projection on market.Statuses;
     entity ProductsView as projection on market.Products actions{
-        action addToOrderByCurrUser()
+        action addToOrderByCurrUser();
     };
+    action addToOrderWithParams(order: UUID, count: Integer, product: UUID);
+    entity FreshProducts as projection on ProductsView where expireDate > $now ORDER BY expireDate desc ;
+    
     entity OrdersView as projection on market.Orders {
         *,
         OrderItems
     };
     entity OrderItemsView as projection on market.OrderItems;
+    
 };

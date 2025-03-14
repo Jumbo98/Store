@@ -34,4 +34,3 @@ annotate Catalog.OrdersView with @(restrict: [{
     to: 'Admin'
 }
 ]); 
-// annotate Catalog.getStockByID with @(requires: 'authenticated-user');
