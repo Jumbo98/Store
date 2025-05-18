@@ -14,6 +14,11 @@ service Catalog {
         *,
         OrderItems
     };
-    entity OrderItemsView as projection on market.OrderItems;
+    entity OrderItemsView as projection on market.OrderItems {
+        order,
+        product,
+        quantity,
+        quantity * product.price as totalByItem : Integer,
+    };
     
 };

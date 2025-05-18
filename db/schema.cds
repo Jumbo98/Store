@@ -55,5 +55,5 @@ entity OrderItems : managed {
 key order : Association to Orders;
 key product : Association to Products;
   quantity : Integer;
-  virtual totalByItem: Integer default 0;
+  virtual totalByItem : Integer default 0;
 }

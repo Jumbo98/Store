@@ -6,20 +6,21 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/cds": "^8",
-    "express": "^4",
+    "@cap-js/hana": "^1",
+    "@sap/cds": "^8.9.4",
     "@sap/xssec": "^4",
-    "@cap-js/hana": "^1"
+    "express": "^4"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.8.0",
     "@cap-js/sqlite": "^1",
     "@sap/cds-dk": "^8",
-    "rimraf": "^5.0.5",
-    "mbt": "^1.2.29"
+    "mbt": "^1.2.29",
+    "rimraf": "^5.0.5"
   },
   "scripts": {
     "start": "cds-serve",
+    "start:prod": "NODE_ENV=production cds-serve",
     "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false",
     "undeploy": "cf undeploy Store --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
@@ -27,11 +28,25 @@
   },
   "cds": {
     "requires": {
-      "auth": "xsuaa",
-      "db": "hana"
+      "db": {
+        "kind": "sqlite"
+      }
     },
-    "sql": {
-      "native_hana_associations": false
+    "hana": {
+      "deploy-format": "hdbtable"
+    },
+    "build": {
+      "target": "gen",
+      "tasks": [
+        {
+          "for": "hana",
+          "src": "db"
+        },
+        {
+          "for": "nodejs",
+          "src": "srv"
+        }
+      ]
     }
   },
   "sapux": [

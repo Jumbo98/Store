@@ -6,30 +6,17 @@ const { uuid } = cds.utils;
 
 
 module.exports = cds.service.impl(function () {
-  // this.on('READ', ProductsView, req => {
-  //   logger('on');
-  // })
   this.on('getStocksByID', getStockByID);
-  // this.on('getCurrentOrder', OrdersView, getCurrentOrder);
 
   this.on('addToOrderByCurrUser', ProductsView, addItemToOrder);
   this.on('addToOrderWithParams', ProductsView, addItemToOrderWithParams);
-  // this.on('deleteCurrentOrder', OrdersView, deleteCurrentOrder);
-  // this.on('deleteItemByID', OrdersView, deleteItemByID);
-  // this.on('deleteItem', OrderItemsView, deleteItem);
-
-//   this.before('READ', ProductsView, beforeRead);
 
   this.after('READ', ProductsView, afterRead);
 
   this.after('each', ProductsView, afterEach);
-  this.after('each', OrderItemsView, afterEachItem);
+  // this.after('each', OrderItemsView, afterEachItem);
   this.after('each', OrdersView, afterEachOrder);
-//   this.on('READ', 'OrdersView', async (req, next) => {
-//     req.query.SELECT.columns.push({ ref: ['OrderItems'], expand: ['*', { ref: ['product'], expand: ['*']} ] });
-    
-//     return await next();
-// });
+  this.after('READ', OrderItemsView, handleCalcTotalByItem);
 
   async function addItemToOrder(req) {
 
@@ -132,13 +119,24 @@ module.exports = cds.service.impl(function () {
 
     return next;
   };
-  function afterEachItem(orderItem, next) {
-    let { product: {price}, quantity } = orderItem;
+  // function afterEachItem(orderItem, next) {
+  //   let { product: {price}, quantity } = orderItem;
   
-    orderItem.totalByItem = price * quantity;
+  //   orderItem.totalByItem = price * quantity;
 
-    return next;
+  //   return next;
+  // };
+
+  function handleCalcTotalByItem (items) {
+    for (const item of items) {
+      if (item.quantity && item.product?.price) {
+        item.totalByItem = item.quantity * item.product.price;
+      } else {
+        item.totalByItem = 0;
+      }
+    }
   };
+
   async function afterEachOrder(order, next) {
     let { ID } = order,
     orderItems = await SELECT.from(OrderItemsView).columns('quantity', 'product.price as price').where({order_ID: ID}),

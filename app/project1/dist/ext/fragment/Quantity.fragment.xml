@@ -1,0 +1,17 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+	<HBox renderType="Bare" alignItems="Center">
+		<Text  text="{quantity}" visible="{= !${ui>/isEditable} }"/>
+		<StepInput
+			core:require="{ handler: 'project1/ext/fragment/Quantity'}"
+			visible="{ui>/isEditable}"
+			value="{quantity}"
+			min="1"
+			max="{path: 'product/stock', targetType: 'float', formatter: 'handler.test'}"
+			width="100%"
+			step="1"
+			largerStep="2"
+			validationMode="LiveChange"
+		/>
+	</HBox>
+	
+</core:FragmentDefinition> 

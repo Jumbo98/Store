@@ -1,0 +1,373 @@
+{
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "project1",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:lrop",
+            "version": "1.16.3",
+            "toolsId": "b7474a24-ec38-40e5-9290-49d97a97d568"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "odata/v4/catalog/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [],
+                    "odataVersion": "4.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "dependencies": {
+            "minUI5Version": "1.132.1",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.fe.templates": {},
+                "sap.f": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "project1.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            },
+            "@i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "resources": {
+            "css": []
+        },
+        "routing": {
+            "config": {
+                "flexibleColumnLayout": {
+                    "defaultTwoColumnLayoutType": "TwoColumnsBeginExpanded",
+                    "defaultThreeColumnLayoutType": "ThreeColumnsMidExpanded"
+                },
+                "routerClass": "sap.f.routing.Router"
+            },
+            "routes": [
+                {
+                    "pattern": "OrdersView:?query:",
+                    "name": "OrdersViewList",
+                    "target": [
+                        "OrdersViewList"
+                    ]
+                },
+                {
+                    "pattern": ":?query:",
+                    "name": "ProductsViewList",
+                    "target": [
+                        "ProductsViewList"
+                    ]
+                },
+                {
+                    "pattern": "ProductsView({key}):?query:",
+                    "name": "ProductsViewObjectPage",
+                    "target": [
+                        "ProductsViewList",
+                        "ProductsViewObjectPage"
+                    ]
+                },
+                {
+                    "name": "OrdersViewObjectPage",
+                    "pattern": "OrdersView({OrdersViewKey}):?query:",
+                    "target": [
+                        "ProductsViewList",
+                        "OrdersViewObjectPage"
+                    ]
+                }
+            ],
+            "targets": {
+                "ProductsViewList": {
+                    "type": "Component",
+                    "id": "ProductsViewList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "contextPath": "/ProductsView",
+                            "variantManagement": "Page",
+                            "navigation": {
+                                "ProductsView": {
+                                    "detail": {
+                                        "route": "ProductsViewObjectPage"
+                                    }
+                                },
+                                "OrdersView": {
+                                    "detail": {
+                                        "route": "OrdersViewObjectPage"
+                                    }
+                                }
+                            },
+                            "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "disableCopyToClipboard": true,
+                                        "enableExport": true,
+                                        "personalization": {
+                                            "column": true,
+                                            "sort": true
+                                        },
+                                        "selectAll": false,
+                                        "selectionMode": "None",
+                                        "quickVariantSelection": {
+                                            "showCounts": true
+                                        }
+                                    },
+                                    "columns": {
+                                        "DataField::title": {
+                                            "availability": "Default"
+                                        },
+                                        "DataField::description": {
+                                            "availability": "Default"
+                                        },
+                                        "DataField::price": {
+                                            "width": "10rem"
+                                        }
+                                    },
+                                    "actions": {
+                                        "refreshProducts": {
+                                            "press": "project1.ext.controller.RefreshBtn.refresh",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": false,
+                                            "text": "{i18n>refresh}"
+                                        }
+                                    }
+                                },
+                                "/OrdersView/@com.sap.vocabularies.UI.v1.LineItem#tableView": {
+                                    "tableSettings": {
+                                        "disableCopyToClipboard": false,
+                                        "enableExport": false,
+                                        "selectAll": false,
+                                        "selectionMode": "None",
+                                        "type": "ResponsiveTable",
+                                        "quickVariantSelection": {
+                                            "showCounts": true
+                                        }
+                                    },
+                                    "actions": {
+                                        "refreshOrders": {
+                                            "press": "project1.ext.controller.RefreshBtn.refreshOrders",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": false,
+                                            "text": "{i18n>refresh}"
+                                        }
+                                    }
+                                }
+                            },
+                            "initialLoad": "Enabled",
+                            "views": {
+                                "paths": [
+                                    {
+                                        "key": "table2",
+                                        "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#table2"
+                                    },
+                                    {
+                                        "key": "tableView",
+                                        "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView",
+                                        "entitySet": "OrdersView"
+                                    }
+                                ],
+                                "showCounts": true
+                            }
+                        }
+                    },
+                    "controlAggregation": "beginColumnPages",
+                    "contextPattern": ""
+                },
+                "ProductsViewObjectPage": {
+                    "type": "Component",
+                    "id": "ProductsViewObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "editableHeaderContent": false,
+                            "contextPath": "/ProductsView",
+                            "content": {
+                                "header": {
+                                    "actions": {
+                                        "AddToActiveOrder": {
+                                            "press": "project1.ext.controller.AddToActiveOrder.openActiveOrderPopup",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "text": "{i18n>addToActiveOrder}",
+                                            "position": {
+                                                "placement": "Before",
+                                                "anchor": "DataFieldForAction::Catalog.addToOrderByCurrUser"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "controlAggregation": "midColumnPages",
+                    "contextPattern": "/ProductsView({key})"
+                },
+                "OrdersViewList": {
+                    "type": "Component",
+                    "id": "OrdersViewList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "contextPath": "/OrdersView",
+                            "variantManagement": "Page",
+                            "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "None",
+                                        "personalization": {
+                                            "column": true,
+                                            "sort": true
+                                        },
+                                        "selectAll": false,
+                                        "enableExport": true,
+                                        "quickVariantSelection": {
+                                            "showCounts": true
+                                        },
+                                        "disableCopyToClipboard": true
+                                    }
+                                }
+                            },
+                            "initialLoad": "Enabled"
+                        }
+                    },
+                    "controlAggregation": "beginColumnPages"
+                },
+                "OrdersViewObjectPage": {
+                    "type": "Component",
+                    "id": "OrdersViewObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "navigation": {},
+                            "contextPath": "/OrdersView",
+                            "controlConfiguration": {
+                                "OrderItems/@com.sap.vocabularies.UI.v1.LineItem#Itemsoforder": {
+                                    "tableSettings": {
+                                        "disableCopyToClipboard": true,
+                                        "enableExport": false,
+                                        "enableFullScreen": true,
+                                        "enablePaste": false,
+                                        "selectAll": false,
+                                        "selectionMode": "Multi",
+                                        "type": "ResponsiveTable",
+                                        "creationMode": {
+                                            "createAtEnd": true,
+                                            "inlineCreationRowsHiddenInEditMode": true,
+                                            "name": "InlineCreationRows"
+                                        },
+                                        "quickVariantSelection": {
+                                            "showCounts": true
+                                        }
+                                    },
+                                    "actions": {
+                                        "refreshOrderItems": {
+                                            "press": "project1.ext.controller.RefreshBtn.refreshOrderItems",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "requiresSelection": false,
+                                            "text": "{i18n>refresh}"
+                                        }
+                                    },
+                                    "columns": {
+                                        "Quantity": {
+                                            "header": "Quantity",
+                                            "width": "20%",
+                                            "position": {
+                                                "anchor": "DataField::product_ID",
+                                                "placement": "After"
+                                            },
+                                            "template": "project1.ext.fragment.Quantity"
+                                        },
+                                        "DataField::product_ID": {
+                                            "widthIncludingColumnHeader": true,
+                                            "width": "25%"
+                                        },
+                                        "DataField::product::price": {
+                                            "width": "20%"
+                                        },
+                                        "DataField::totalByItem": {
+                                            "width": "19%"
+                                        }
+                                    }
+                                }
+                            },
+                            "sectionLayout": "Page",
+                            "variantManagement": "None",
+                            "editableHeaderContent": false
+                        }
+                    },
+                    "controlAggregation": "midColumnPages",
+                    "contextPattern": "/OrdersView({OrdersViewKey})"
+                }
+            }
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {
+                    "sap.fe.templates.ObjectPage.ObjectPageController#project1::OrdersViewObjectPage": {
+                        "controllerName": "project1.ext.controller.OrdersView"
+                    }
+                }
+            }
+        },
+        "rootView": {
+            "viewName": "sap.fe.templates.RootContainer.view.Fcl",
+            "type": "XML",
+            "async": true,
+            "id": "appRootView"
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}

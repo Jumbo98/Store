@@ -1,0 +1,2 @@
+sap.ui.define(["sap/ui/core/mvc/ControllerExtension"],function(e){"use strict";return e.extend("project1.ext.controller.OrdersView",{override:{onInit:function(){var e=this.base.getExtensionAPI().getModel();this.base.getExtensionAPI().getEditFlow().attachonBeforeDelete(async function(e){var t=sap.ui.getCore().byId("project1::OrdersViewObjectPage--fe::table::OrderItems::LineItem::Itemsoforder::Table"),r=queueMicrotask(async()=>await t.getCounts())})}}})});
+//# sourceMappingURL=OrdersView.controller.js.map

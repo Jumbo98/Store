@@ -1,0 +1,23 @@
+{
+  "Component.js.map": 1747404018576,
+  "ext/controller/RefreshBtn.js": 1747119907557,
+  "ext/fragment/Quantity.js": 1747119907557,
+  "ext/controller/OrdersView.controller.js": 1747383545835,
+  "ext/controller/AddToActiveOrder.js": 1747119907557,
+  "manifest.json": 1747404018451,
+  "Component.js": 1747119907557,
+  "ext/controller/RefreshBtn-dbg.js": 1747119907557,
+  "ext/controller/RefreshBtn.js.map": 1747404018586,
+  "ext/fragment/Quantity-dbg.js": 1747119907557,
+  "ext/fragment/Quantity.js.map": 1747404018575,
+  "ext/controller/OrdersView-dbg.controller.js": 1747383545835,
+  "ext/controller/OrdersView.controller.js.map": 1747404018587,
+  "ext/controller/AddToActiveOrder-dbg.js": 1747119907557,
+  "ext/controller/AddToActiveOrder.js.map": 1747404018611,
+  "Component-dbg.js": 1747119907557,
+  "i18n/i18n.properties": 1747119907557,
+  "Component-preload.js": 1747404018681,
+  "Component-preload.js.map": 1747404018681,
+  "ext/fragment/Quantity.fragment.xml": 1747119907557,
+  "index.html": 1747119907557
+}

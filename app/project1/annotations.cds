@@ -97,6 +97,13 @@ annotate service.ProductsView with @(
             GroupBy : [
                 company_ID,
             ],
+            SortOrder : [
+                {
+                    $Type : 'Common.SortOrderType',
+                    Property : expireDate,
+                    Descending : true,
+                },
+            ],
         },
         SelectionVariant : {
             $Type : 'UI.SelectionVariantType',
@@ -361,6 +368,7 @@ annotate service.OrderItemsView with @(
             $Type : 'UI.DataField',
             Value : product.expireDate,
             Label : 'expireDate',
+
             Criticality : product.expireStatus,
         },
         {
@@ -371,7 +379,7 @@ annotate service.OrderItemsView with @(
         {
             $Type : 'UI.DataField',
             Value : totalByItem,
-            Label : 'totalByItem',
+            Label : 'Total by item',
         },
     ]
 );

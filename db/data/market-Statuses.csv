@@ -1,0 +1,12 @@
+ID,statusCriticality,title,description
+65F30140-FADA-914F-1900-51EE8E50FF04,3,Received,The order has been received but not processed yet
+66F30140-FADA-914F-1900-51EE8E50FF04,5,Processing,The order is currently being processed
+67F30140-FADA-914F-1900-51EE8E50FF04,3,Shipped,The order has been packaged and dispatched
+68F30140-FADA-914F-1900-51EE8E50FF04,1,Out for Delivery,The order is out for delivery and will reach soon
+69F30140-FADA-914F-1900-51EE8E50FF04,3,Delivered,The order has been delivered to the customer
+6AF30140-FADA-914F-1900-51EE8E50FF04,1,Cancelled,The order has been cancelled before processing
+6BF30140-FADA-914F-1900-51EE8E50FF04,2,Returned,The order was returned after delivery or refused
+6CF30140-FADA-914F-1900-51EE8E50FF04,2,Refunded,The order has been refunded after a return
+6DF30140-FADA-914F-1900-51EE8E50FF04,2,Held,The order is on hold due to complications or customer request
+6EF30140-FADA-914F-1900-51EE8E50FF04,1,Failed,The order processing failed due to system or inventory issues
+6FF30140-FADA-914F-1900-51EE8E50FF04,3,Ordering,The order is in the process of creation

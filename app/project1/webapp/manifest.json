@@ -91,6 +91,13 @@
       },
       "routes": [
         {
+          "pattern": "OrdersView:?query:",
+          "name": "OrdersViewList",
+          "target": [
+            "OrdersViewList"
+          ]
+        },
+        {
           "pattern": ":?query:",
           "name": "ProductsViewList",
           "target": [
@@ -146,7 +153,10 @@
                       "sort": true
                     },
                     "selectAll": false,
-                    "selectionMode": "None"
+                    "selectionMode": "None",
+                    "quickVariantSelection": {
+                      "showCounts": true
+                    }
                   },
                   "columns": {
                     "DataField::title": {
@@ -177,7 +187,7 @@
                     "selectionMode": "None",
                     "type": "ResponsiveTable",
                     "quickVariantSelection": {
-                      "showCounts": false
+                      "showCounts": true
                     }
                   },
                   "actions": {
@@ -192,7 +202,6 @@
                 }
               },
               "initialLoad": "Enabled",
-              "defaultTemplateAnnotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#table2",
               "views": {
                 "paths": [
                   {
@@ -204,7 +213,8 @@
                     "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView",
                     "entitySet": "OrdersView"
                   }
-                ]
+                ],
+                "showCounts": true
               }
             }
           },
@@ -239,6 +249,37 @@
           },
           "controlAggregation": "midColumnPages",
           "contextPattern": "/ProductsView({key})"
+        },
+        "OrdersViewList": {
+          "type": "Component",
+          "id": "OrdersViewList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/OrdersView",
+              "variantManagement": "Page",
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable",
+                    "selectionMode": "None",
+                    "personalization": {
+                      "column": true,
+                      "sort": true
+                    },
+                    "selectAll": false,
+                    "enableExport": true,
+                    "quickVariantSelection": {
+                      "showCounts": true
+                    },
+                    "disableCopyToClipboard": true
+                  }
+                }
+              },
+              "initialLoad": "Enabled"
+            }
+          },
+          "controlAggregation": "beginColumnPages"
         },
         "OrdersViewObjectPage": {
           "type": "Component",
@@ -309,12 +350,6 @@
         }
       }
     },
-    "rootView": {
-      "viewName": "sap.fe.templates.RootContainer.view.Fcl",
-      "type": "XML",
-      "async": true,
-      "id": "appRootView"
-    },
     "extends": {
       "extensions": {
         "sap.ui.controllerExtensions": {
@@ -323,6 +358,12 @@
           }
         }
       }
+    },
+    "rootView": {
+      "viewName": "sap.fe.templates.RootContainer.view.Fcl",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
     }
   },
   "sap.fiori": {
