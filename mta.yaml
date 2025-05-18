@@ -2,6 +2,7 @@ _schema-version: 3.3.0
 ID: Store
 description: A simple CAP project.
 version: 1.0.0
+
 modules:
   - name: Store-srv
     type: nodejs
@@ -19,6 +20,7 @@ modules:
       readiness-health-check-type: http
     build-parameters:
       builder: npm
+
   - name: Store-db-deployer
     type: hdb
     path: gen/db
@@ -26,6 +28,7 @@ modules:
       - name: Store-db
     parameters:
       buildpack: nodejs_buildpack
+
   - name: Store
     type: approuter.nodejs
     path: app/router
@@ -37,12 +40,13 @@ modules:
           name: srv-api
           url: ~{srv-url}
       - name: Store-auth
-      - name: Store-destination-service
+      - name: Store-ui5-destination
         group: destinations
         properties:
           forwardAuthToken: false
           name: ui5
           url: https://ui5.sap.com
+      - name: Store-repo-host
     provides:
       - name: app-api
         properties:
@@ -52,6 +56,7 @@ modules:
       disk-quota: 256M
       keep-existing-routes: true
       memory: 256M
+
   - name: Store-app-content
     type: com.sap.application.content
     path: .
@@ -66,6 +71,7 @@ modules:
             - project1.zip
           name: project1
           target-path: resources/
+
   - name: project1
     type: html5
     path: app/project1
@@ -75,8 +81,8 @@ modules:
       commands:
         - npm install
         - npm run build:cf
-      supported-platforms:
-        []
+      supported-platforms: []
+
 resources:
   - name: Store-auth
     type: org.cloudfoundry.managed-service
@@ -87,38 +93,43 @@ resources:
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
+
   - name: Store-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
+
   - name: Store-repo-host
     type: org.cloudfoundry.managed-service
     parameters:
       service: html5-apps-repo
       service-name: Store-html5-service
       service-plan: app-host
-  - name: Store-destination-service
+
+  - name: Store-ui5-destination
     type: org.cloudfoundry.managed-service
     parameters:
+      service: destination
+      service-name: Store-ui5-destination-service
+      service-plan: lite
       config:
-        HTML5Runtime_enabled: false
+        HTML5Runtime_enabled: true
         init_data:
           instance:
             destinations:
-              - Authentication: NoAuthentication
-                Name: ui5
-                ProxyType: Internet
-                Type: HTTP
+              - Name: ui5
                 URL: https://ui5.sap.com
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: NoAuthentication
             existing_destinations_policy: update
         version: 1.0.0
-      service: destination
-      service-name: Store-destination-service
-      service-plan: lite
+
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
+
 build-parameters:
   before-all:
     - builder: custom
