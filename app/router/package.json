@@ -8,5 +8,10 @@
   },
   "scripts": {
     "start": "node node_modules/@sap/approuter/approuter.js"
+  },
+  "build-parameters": {
+    "requires": [
+      "xs-app.json"
+    ]
   }
 }
