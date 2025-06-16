@@ -12,11 +12,16 @@ module.exports = cds.service.impl(function () {
   this.on('addToOrderWithParams', ProductsView, addItemToOrderWithParams);
 
   this.after('READ', ProductsView, afterRead);
+  this.before('READ', ProductsView, beforeReadProductsView);
 
   this.after('each', ProductsView, afterEach);
   // this.after('each', OrderItemsView, afterEachItem);
   this.after('each', OrdersView, afterEachOrder);
   this.after('READ', OrderItemsView, handleCalcTotalByItem);
+
+  function beforeReadProductsView(req){
+    debugger;
+  }
 
   async function addItemToOrder(req) {
 

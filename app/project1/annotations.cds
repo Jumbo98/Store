@@ -227,6 +227,12 @@ annotate service.ProductsView with {
 };
 
 annotate service.ProductsView with {
+  onlyFreshProducts @(
+    Common.Label: 'Только свежие продукты'
+  );
+};
+
+annotate service.ProductsView with {
     company @(
         Common.Label : '{i18n>Companies}',
         Common.Text : {

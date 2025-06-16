@@ -1,10 +1,14 @@
+
 using market from '../db/schema.cds';
 
 service Catalog {
     entity ProductTypeView as projection on market.ProductType;
     entity CompanyManufacturersView as projection on market.CompanyManufacturers;
     entity StatusesView as projection on market.Statuses;
-    entity ProductsView as projection on market.Products actions{
+    entity ProductsView as projection on market.Products{
+        *,
+        virtual null as onlyFreshProducts : Boolean
+    } actions{
         action addToOrderByCurrUser();
     };
     action addToOrderWithParams(order: UUID, count: Integer, product: UUID);

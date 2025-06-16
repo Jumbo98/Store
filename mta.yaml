@@ -1,148 +1,152 @@
 _schema-version: 3.3.0
 ID: Store
-version: 1.0.0
 description: A simple CAP project.
-
+version: 1.0.0
 modules:
-  - name: Store-srv
-    type: nodejs
-    path: gen/srv
-    requires:
-      - name: Store-auth
-      - name: Store-db
-    provides:
-      - name: srv-api
-        properties:
-          srv-url: ${default-url}
-    parameters:
-      buildpack: nodejs_buildpack
-      readiness-health-check-type: http
-      readiness-health-check-http-endpoint: /health
-    build-parameters:
-      builder: npm
-
-  - name: Store-db-deployer
-    type: hdb
-    path: gen/db
-    requires:
-      - name: Store-db
-    parameters:
-      buildpack: nodejs_buildpack
-
-  - name: Store
-    type: approuter.nodejs
-    path: app/router
-    requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api
-          url: ~{srv-url}
-          forwardAuthToken: true
-      - name: Store-auth
-      - name: HTML5-App-runtime
-        group: destinations
-        properties:
-          name: html5-apps-repo-rt
-          url: https://html5-apps-repo-rt.cfapps.us10-001.hana.ondemand.com
-          forwardAuthToken: true
-    provides:
-      - name: app-api
-        properties:
-          app-protocol: ${protocol}
-          app-uri: ${default-uri}
-    parameters:
-      memory: 256M
-      disk-quota: 256M
-      keep-existing-routes: true
-
-  - name: Store-app-content
-    type: com.sap.application.content
-    path: .
-    requires:
-      - name: html5-apps-repo
-        parameters:
-          content-target: true
-    build-parameters:
-      build-result: resources
-      requires:
-        - name: project1
-          artifacts:
-            - project1.zip
-          target-path: resources/
-
-  - name: project1
-    type: html5
-    path: app/project1
-    build-parameters:
-      builder: custom
-      build-result: dist
-      commands:
-        - npm install
-        - npm run build:cf
-      supported-platforms: []
-
-resources:
+- name: Store-srv
+  type: nodejs
+  path: gen/srv
+  requires:
   - name: Store-auth
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: xsuaa
-      service-plan: application
-      path: ./xs-security.json
-      config:
-        xsappname: Store-${org}-${space}
-        tenant-mode: dedicated
-
   - name: Store-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-
-  - name: html5-apps-repo
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-host
-
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    readiness-health-check-http-endpoint: /health
+    readiness-health-check-type: http
+  build-parameters:
+    builder: npm
+- name: Store-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: Store-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: Store
+  type: approuter.nodejs
+  path: app/router
+  requires:
+  - name: srv-api
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: srv-api
+      url: ~{srv-url}
+  - name: Store-auth
   - name: HTML5-App-runtime
-    type: org.cloudfoundry.managed-service
+    group: destinations
+    properties:
+      forwardAuthToken: true
+      name: html5-apps-repo-rt
+      url: https://html5-apps-repo-rt.cfapps.us10-001.hana.ondemand.com
+  provides:
+  - name: app-api
+    properties:
+      app-protocol: ${protocol}
+      app-uri: ${default-uri}
+  parameters:
+    disk-quota: 256M
+    keep-existing-routes: true
+    memory: 256M
+- name: Store-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: html5-apps-repo
     parameters:
-      service: html5-apps-repo
-      service-plan: app-runtime
-
-  - name: html5-destination
-    type: org.cloudfoundry.managed-service
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - project1.zip
+      name: project1
+      target-path: resources/
+- name: project1
+  type: html5
+  path: app/project1
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: workflow
+  type: com.sap.application.content
+  path: workflow
+  requires:
+  - name: sap_processautomation
     parameters:
-      service: destination
-      service-plan: lite
-      service-name: Store-destination
-      config:
-        HTML5Runtime_enabled: true
-        init_data:
-          instance:
-            destinations:
-              - Name: ui5
-                URL: https://ui5.sap.com
-                Type: HTTP
-                ProxyType: Internet
-                Authentication: NoAuthentication
-              - Name: html5-apps-repo-rt
-                ServiceInstanceName: HTML5-App-runtime
-                ServiceKeyName: html5-runtime-key
-                Authentication: NoAuthentication
-                ProxyType: Internet
-                Type: HTML5
-            existing_destinations_policy: update
-        version: 1.0.0
-
+      content-target: true
+      service-key:
+        config:
+          deployUsageScenario: workflow
+        name: spa-workflow-service-key
+resources:
+- name: Store-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: Store-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: Store-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: html5-apps-repo
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: HTML5-App-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+- name: html5-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            Name: html5-apps-repo-rt
+            ProxyType: Internet
+            ServiceInstanceName: HTML5-App-runtime
+            ServiceKeyName: html5-runtime-key
+            Type: HTML5
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: Store-destination
+    service-plan: lite
+- name: sap_processautomation
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: process-automation-service
+    service-plan: standard
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
-
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm ci
-        - npx cds build --production
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production

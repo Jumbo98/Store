@@ -1,0 +1,20 @@
+sap.ui.define(["sap/ui/model/Filter", "sap/ui/model/FilterOperator", "sap/ui/core/date/UI5Date"], function(Filter, FilterOperator,UI5Date) {
+    "use strict";
+    return {
+        filterItems: function(oEvent) {
+            var bSelected = oEvent.getParameter("selected");
+            
+            var oGridList = sap.ui.getCore().byId('project1::ProductsViewList--fe::CustomTab::ProductsCard--productGrid');
+      
+            if (oGridList) {
+              let {filters} = this.getFilters();
+              if (bSelected) {
+                var oToday = UI5Date.getInstance();
+                oToday.setHours(0,0,0,0);
+                filters.push(new Filter("expireDate", FilterOperator.GE, oToday.toISOString()));
+              }
+              oGridList.getBinding("items").filter(filters);
+            }
+        }
+    };
+});

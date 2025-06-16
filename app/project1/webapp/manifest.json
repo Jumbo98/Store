@@ -91,13 +91,6 @@
       },
       "routes": [
         {
-          "pattern": "OrdersView:?query:",
-          "name": "OrdersViewList",
-          "target": [
-            "OrdersViewList"
-          ]
-        },
-        {
           "pattern": ":?query:",
           "name": "ProductsViewList",
           "target": [
@@ -199,11 +192,26 @@
                       "text": "{i18n>refresh}"
                     }
                   }
+                },
+                "@com.sap.vocabularies.UI.v1.SelectionFields": {
+                  "filterFields": {
+                    "onlyFreshProducts": {
+                      "label": "{i18n>onlyfreshproducts}",
+                      "property": "onlyFreshProducts",
+                      "template": "project1.ext.fragment.OnlyFreshProducts",
+                      "required": false
+                    }
+                  }
                 }
               },
               "initialLoad": "Enabled",
               "views": {
                 "paths": [
+                  {
+                    "key": "ProductsCard",
+                    "label": "{i18n>products}",
+                    "template": "project1.ext.fragment.ProductsGridTable"
+                  },
                   {
                     "key": "table2",
                     "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#table2"
@@ -249,37 +257,6 @@
           },
           "controlAggregation": "midColumnPages",
           "contextPattern": "/ProductsView({key})"
-        },
-        "OrdersViewList": {
-          "type": "Component",
-          "id": "OrdersViewList",
-          "name": "sap.fe.templates.ListReport",
-          "options": {
-            "settings": {
-              "contextPath": "/OrdersView",
-              "variantManagement": "Page",
-              "controlConfiguration": {
-                "@com.sap.vocabularies.UI.v1.LineItem": {
-                  "tableSettings": {
-                    "type": "ResponsiveTable",
-                    "selectionMode": "None",
-                    "personalization": {
-                      "column": true,
-                      "sort": true
-                    },
-                    "selectAll": false,
-                    "enableExport": true,
-                    "quickVariantSelection": {
-                      "showCounts": true
-                    },
-                    "disableCopyToClipboard": true
-                  }
-                }
-              },
-              "initialLoad": "Enabled"
-            }
-          },
-          "controlAggregation": "beginColumnPages"
         },
         "OrdersViewObjectPage": {
           "type": "Component",
@@ -355,6 +332,9 @@
         "sap.ui.controllerExtensions": {
           "sap.fe.templates.ObjectPage.ObjectPageController#project1::OrdersViewObjectPage": {
             "controllerName": "project1.ext.controller.OrdersView"
+          },
+          "sap.fe.templates.ListReport.ListReportController#project1::ProductsViewList": {
+            "controllerName": "project1.ext.controller.ProductGridList"
           }
         }
       }
