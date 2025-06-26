@@ -213,10 +213,6 @@
                     "template": "project1.ext.fragment.ProductsGridTable"
                   },
                   {
-                    "key": "table2",
-                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#table2"
-                  },
-                  {
                     "key": "tableView",
                     "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#tableView",
                     "entitySet": "OrdersView"
@@ -249,6 +245,18 @@
                         "placement": "Before",
                         "anchor": "DataFieldForAction::Catalog.addToOrderByCurrUser"
                       }
+                    }
+                  }
+                },
+                "body": {
+                  "sections": {
+                    "Comments": {
+                      "template": "project1.ext.fragment.Comments",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "GeneratedFacet1"
+                      },
+                      "title": "Comments"
                     }
                   }
                 }

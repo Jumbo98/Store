@@ -1,0 +1,8 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m">
+        <CheckBox
+            id="onlyFreshProducts"
+            core:require="{handler: 'project1/ext/fragment/OnlyFreshProducts'}"
+            selected="{path: 'filterValues>', type: 'sap.fe.macros.filter.type.Value', formatOptions: { operator: 'project1.ext.fragment.OnlyFreshProducts.filterItems' }}"
+        
+        />
+</core:FragmentDefinition>

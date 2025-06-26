@@ -1,0 +1,2 @@
+sap.ui.define(["sap/m/MessageToast","sap/ui/model/Filter"],function(e,t){"use strict";return{onProductPress:function(e){this.getRouting().navigateToRoute("ProductsViewObjectPage",{key:e.getSource().getBindingContext().getObject("ID")})}}});
+//# sourceMappingURL=ProductsGridTable.controller.js.map

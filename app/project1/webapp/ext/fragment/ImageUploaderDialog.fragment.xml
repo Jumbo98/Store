@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:unified="sap.ui.unified"
+>
+    <Dialog
+        core:require="{ handler: 'project1/ext/fragment/Comments'}"
+        id="uploadDialog"
+        title="Загрузить картинку"
+        afterClose="handler.onUploadDialogClose"
+    >
+        <content>
+            <unified:FileUploader
+                id="fileUploader"
+                width="95%"
+                class="sapUiTinyMargin"
+                name="myFileUpload"
+                fileType="jpeg,jpg,png"
+            />
+        </content>
+        <beginButton>
+            <Button
+                core:require="{ handler: 'project1/ext/fragment/Comments'}"
+                text="Upload"
+                press="handler.onUploadImage"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                core:require="{ handler: 'project1/ext/fragment/Comments'}"
+                text="Cancel"
+                press="handler.onUploadCancel"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

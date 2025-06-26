@@ -2,6 +2,7 @@ _schema-version: 3.3.0
 ID: Store
 description: A simple CAP project.
 version: 1.0.0
+
 modules:
 - name: Store-srv
   type: nodejs
@@ -19,6 +20,7 @@ modules:
     readiness-health-check-type: http
   build-parameters:
     builder: npm
+
 - name: Store-db-deployer
   type: hdb
   path: gen/db
@@ -26,6 +28,7 @@ modules:
   - name: Store-db
   parameters:
     buildpack: nodejs_buildpack
+
 - name: Store
   type: approuter.nodejs
   path: app/router
@@ -52,41 +55,7 @@ modules:
     disk-quota: 256M
     keep-existing-routes: true
     memory: 256M
-- name: Store-app-content
-  type: com.sap.application.content
-  path: .
-  requires:
-  - name: html5-apps-repo
-    parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
-    requires:
-    - artifacts:
-      - project1.zip
-      name: project1
-      target-path: resources/
-- name: project1
-  type: html5
-  path: app/project1
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: workflow
-  type: com.sap.application.content
-  path: workflow
-  requires:
-  - name: sap_processautomation
-    parameters:
-      content-target: true
-      service-key:
-        config:
-          deployUsageScenario: workflow
-        name: spa-workflow-service-key
+
 resources:
 - name: Store-auth
   type: org.cloudfoundry.managed-service
@@ -97,21 +66,25 @@ resources:
     path: ./xs-security.json
     service: xsuaa
     service-plan: application
+
 - name: Store-db
   type: com.sap.xs.hdi-container
   parameters:
     service: hana
     service-plan: hdi-shared
+
 - name: html5-apps-repo
   type: org.cloudfoundry.managed-service
   parameters:
     service: html5-apps-repo
     service-plan: app-host
+
 - name: HTML5-App-runtime
   type: org.cloudfoundry.managed-service
   parameters:
     service: html5-apps-repo
     service-plan: app-runtime
+
 - name: html5-destination
   type: org.cloudfoundry.managed-service
   parameters:
@@ -136,14 +109,17 @@ resources:
     service: destination
     service-name: Store-destination
     service-plan: lite
+
 - name: sap_processautomation
   type: org.cloudfoundry.managed-service
   parameters:
     service: process-automation-service
     service-plan: standard
+
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
+
 build-parameters:
   before-all:
   - builder: custom

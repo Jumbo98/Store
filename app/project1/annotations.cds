@@ -87,31 +87,6 @@ annotate service.ProductsView with @(
         type_ID,
         company_ID,
     ],
-    UI.SelectionPresentationVariant #table2 : {
-        $Type : 'UI.SelectionPresentationVariantType',
-        PresentationVariant : {
-            $Type : 'UI.PresentationVariantType',
-            Visualizations : [
-                '@UI.LineItem',
-            ],
-            GroupBy : [
-                company_ID,
-            ],
-            SortOrder : [
-                {
-                    $Type : 'Common.SortOrderType',
-                    Property : expireDate,
-                    Descending : true,
-                },
-            ],
-        },
-        SelectionVariant : {
-            $Type : 'UI.SelectionVariantType',
-            SelectOptions : [
-            ],
-        },
-        Text : '{i18n>Products}',
-    },
     UI.Identification : [
         {
             $Type : 'UI.DataFieldForAction',
@@ -122,7 +97,7 @@ annotate service.ProductsView with @(
 
 );
 
-
+ 
 
 annotate service.ProductsView with {
     title @Common.FieldControl : #Mandatory
