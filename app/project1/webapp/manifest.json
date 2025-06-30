@@ -82,13 +82,7 @@
       "css": []
     },
     "routing": {
-      "config": {
-        "flexibleColumnLayout": {
-          "defaultTwoColumnLayoutType": "TwoColumnsBeginExpanded",
-          "defaultThreeColumnLayoutType": "ThreeColumnsMidExpanded"
-        },
-        "routerClass": "sap.f.routing.Router"
-      },
+      "config": {},
       "routes": [
         {
           "pattern": ":?query:",
@@ -136,42 +130,6 @@
                 }
               },
               "controlConfiguration": {
-                "@com.sap.vocabularies.UI.v1.LineItem": {
-                  "tableSettings": {
-                    "type": "ResponsiveTable",
-                    "disableCopyToClipboard": true,
-                    "enableExport": true,
-                    "personalization": {
-                      "column": true,
-                      "sort": true
-                    },
-                    "selectAll": false,
-                    "selectionMode": "None",
-                    "quickVariantSelection": {
-                      "showCounts": true
-                    }
-                  },
-                  "columns": {
-                    "DataField::title": {
-                      "availability": "Default"
-                    },
-                    "DataField::description": {
-                      "availability": "Default"
-                    },
-                    "DataField::price": {
-                      "width": "10rem"
-                    }
-                  },
-                  "actions": {
-                    "refreshProducts": {
-                      "press": "project1.ext.controller.RefreshBtn.refresh",
-                      "visible": true,
-                      "enabled": true,
-                      "requiresSelection": false,
-                      "text": "{i18n>refresh}"
-                    }
-                  }
-                },
                 "/OrdersView/@com.sap.vocabularies.UI.v1.LineItem#tableView": {
                   "tableSettings": {
                     "disableCopyToClipboard": false,
@@ -221,9 +179,7 @@
                 "showCounts": true
               }
             }
-          },
-          "controlAggregation": "beginColumnPages",
-          "contextPattern": ""
+          }
         },
         "ProductsViewObjectPage": {
           "type": "Component",
@@ -262,9 +218,7 @@
                 }
               }
             }
-          },
-          "controlAggregation": "midColumnPages",
-          "contextPattern": "/ProductsView({key})"
+          }
         },
         "OrdersViewObjectPage": {
           "type": "Component",
@@ -329,9 +283,7 @@
               "variantManagement": "None",
               "editableHeaderContent": false
             }
-          },
-          "controlAggregation": "midColumnPages",
-          "contextPattern": "/OrdersView({OrdersViewKey})"
+          }
         }
       }
     },
@@ -346,12 +298,6 @@
           }
         }
       }
-    },
-    "rootView": {
-      "viewName": "sap.fe.templates.RootContainer.view.Fcl",
-      "type": "XML",
-      "async": true,
-      "id": "appRootView"
     }
   },
   "sap.fiori": {

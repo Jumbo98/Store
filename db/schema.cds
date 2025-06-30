@@ -26,19 +26,20 @@ entity CompanyManufacturers : cuid, describer {
 }
 
 entity Comments : cuid, managed {
-    key product     : Association to Products;
-        content     : LargeString;
-        rating      : Decimal(10, 3);
+    key product : Association to Products;
+        content : LargeString;
+        rating  : Decimal(10, 3);
 }
 
 entity Files : cuid, managed {
-  key ID       : UUID;
-      fileName : String;
-      mimeType : String;
-      data     : LargeBinary;
+    key ID       : UUID;
+        fileName : String;
+        mimeType : String;
+        data     : LargeBinary;
 }
+
 annotate Files with {
-  data @Core.MediaType: 'mimeType';
+    data @Core.MediaType: 'mimeType';
 }
 
 
@@ -49,6 +50,7 @@ entity Products : cuid, describer {
     price        : Integer;
     expireDate   : DateTime;
     expireStatus : ExpireStatus;
+    imageURL     : String;
     rating       : Decimal(10, 3);
     Comments     : Association to many Comments
                        on Comments.product = $self;

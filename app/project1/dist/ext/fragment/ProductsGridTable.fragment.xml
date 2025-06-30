@@ -1,74 +1,91 @@
-<core:FragmentDefinition 
-	xmlns:core="sap.ui.core" 
-	xmlns="sap.m"
-	xmlns:f="sap.f"
+<core:FragmentDefinition
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:grid="sap.ui.layout.cssgrid"
 >
-<!-- <Button core:require="{ handler: 'project1/ext/fragment/ProductsGridTable.controller'}" text="ProductsGridTable" press="handler.onPress" /> -->
-		<f:GridList
-			id="productGrid"
-			items="{
+    <!-- <Button core:require="{ handler: 'project1/ext/fragment/ProductsGridTable.controller'}" text="ProductsGridTable" press="handler.onPress" /> -->
+    <f:GridList
+        id="productGrid"
+        items="{
 				path: '/ProductsView',
 				sorter: { 
 						path: 'type/title',
 						group: true 
 						}
 			}"
-			core:require="{ handler: 'project1/ext/fragment/ProductsGridTable.controller'}"
-			>
-			<f:GridListItem
-				type="Active"
-				press="handler.onProductPress"
-				counter="{stock}"   
-				
-			> 
-
-				<VBox class="sapUiSmallMargin" renderType="Bare" height="100%">
-					<layoutData>
-						<FlexItemData growFactor="1" shrinkFactor="0" />
-					</layoutData>
-					<Image
-						width="100%"
-						densityAware="false"
-						src='/project1/webapp/ext/img/placeholder.webp' />
-
-					
-					<VBox class="sapUiTinyMarginTop">
-
-						<Title
-							text="{title}"
-							level="H4"
-							wrapping="true"
-							width="100%" />
-
-						<Text
-							text="{description}"
-							wrapping="true"
-							maxLines="4"
-							class="sapUiTinyMarginTop"
-							width="100%" />
-
-					</VBox>
-
-					<HBox visible="false" class="sapUiTinyMarginTop">
-						<ObjectAttribute
-							text="{company/title}"
-							class="sapUiSmallMarginEnd" />
-						<ObjectAttribute
-							text="{type/title}" />
-					</HBox>
-
-					<HBox class="sapUiTinyMarginTop">
-						<ObjectNumber
-							number="{price}"
-							unit="USD"   
-							class="sapUiMediumMarginTop" />
-					</HBox>
-					<HBox class="sapUiTinyMarginTop">
-						<RatingIndicator maxValue="5" enabled= "false" value="4" iconSize="22px" tooltip="Rating Tooltip" />
-					</HBox>
-
-				</VBox>
-			</f:GridListItem>
-		</f:GridList>
-	
+        core:require="{ handler: 'project1/ext/fragment/ProductsGridTable.controller'}"
+    >
+        
+        <f:GridListItem
+    type="Active"
+    press="handler.onProductPress"
+    counter="{stock}"
+>
+    <f:layoutData>
+        <grid:ResponsiveColumnItemLayoutData columns="2" rows="1" />
+    </f:layoutData>
+    <VBox
+        height="320px"
+        justifyContent="SpaceBetween"
+        class="sapUiSmallMargin"
+        renderType="Bare"
+    >
+        <VBox alignItems="Center" renderType="Bare">
+            <Avatar
+                displayShape="Square"
+                displaySize="Custom"
+                customDisplaySize="11rem"
+                src="/project1/webapp/ext/img/placeholder.webp"
+            />
+            <Title
+                textAlign="Center"
+                text="{title}"
+                level="H4"
+                wrapping="true"
+                width="100%"
+                class="sapUiTinyMarginTop"
+            />
+            <Text
+                textAlign="Center"
+                text="{description}"
+                wrapping="true"
+                maxLines="4"
+                width="100%"
+                class="sapUiTinyMarginTop"
+            />
+            <HBox
+                visible="false"
+                class="sapUiTinyMarginTop"
+            >
+                <ObjectAttribute
+                    text="{company/title}"
+                    class="sapUiSmallMarginEnd"
+                />
+                <ObjectAttribute text="{type/title}" />
+            </HBox>
+        </VBox>
+        <HBox
+            alignItems="Center"
+            renderType="Bare"
+            justifyContent="SpaceBetween"
+            width="100%"
+            class="sapUiTinyMarginTop"
+        >
+            <ObjectNumber
+                number="{price}"
+                unit="USD"
+                class="sapUiTinyMarginEnd"
+            />
+            <RatingIndicator
+                maxValue="5"
+                enabled="false"
+                value="{rating}"
+                iconSize="20px"
+                tooltip="Rating"
+            />
+        </HBox>
+    </VBox>
+</f:GridListItem>
+    </f:GridList>
 </core:FragmentDefinition>

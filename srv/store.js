@@ -156,20 +156,34 @@ module.exports = cds.service.impl(function () {
 
   async function afterRead(products, req) {
     const oneDay = 1000 * 60 * 60 * 24;
-    let currentDate = new Date().getTime(),
-      arr = products.map(product => {
-        if (product.stock === 0) {
-          product.description = '00000000000000000000000'
-        }
+    let currentDate = new Date().getTime();
+    if (!Array.isArray(products)) products = [products];
 
-        if (new Date(product.expireDate).getTime() - currentDate > oneDay * 3) {
-          product.expireStatus = 0;
-        } else {
-          product.expireStatus = 1;
-        }
-      });
+    for (let product of products) {
+      const result = await SELECT.from(CommentsView)
+        .columns('rating')
+        .where({ product_ID: product.ID });
+      const resultWithoutNull = result.filter(item => item.rating);
+      if (result.length > 0) {
+        product.rating = resultWithoutNull.reduce((sum, c) => sum + (c.rating || 0), 0) / result.length;
+      } else {
+        product.rating = null;
+      }
 
-    return arr;
+      if (product.stock === 0) {
+        product.description = '00000000000000000000000'
+      }
+
+      if (new Date(product.expireDate).getTime() - currentDate > oneDay * 3) {
+        product.expireStatus = 0;
+      } else {
+        product.expireStatus = 1;
+      }
+    }
+
+
+
+    return products;
   };
   function afterEach(product, next) {
     let { stock } = product;
@@ -180,13 +194,7 @@ module.exports = cds.service.impl(function () {
 
     return next;
   };
-  // function afterEachItem(orderItem, next) {
-  //   let { product: {price}, quantity } = orderItem;
 
-  //   orderItem.totalByItem = price * quantity;
-
-  //   return next;
-  // };
 
   function handleCalcTotalByItem(items) {
     for (const item of items) {
